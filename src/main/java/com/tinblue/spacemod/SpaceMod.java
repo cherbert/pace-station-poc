@@ -53,7 +53,6 @@ public class SpaceMod implements ModInitializer {
             .create(ShipEntity::new, SpawnGroup.MISC)
             .dimensions(2.5f, 1.1f)
             .maxTrackingRange(10)
-            .fireImmune()
             .build();
 
     private static final String INIT_TAG = "spacemod_init";
