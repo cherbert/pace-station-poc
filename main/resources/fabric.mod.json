@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "spacemod",
+  "version": "${version}",
+  "name": "Space Station PoC",
+  "description": "Proof-of-concept space mod: wake up on a small space station, board the docked ship and fly it to the nearby planet.",
+  "authors": [
+    "Chris"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.tinblue.spacemod.SpaceMod"
+    ],
+    "client": [
+      "com.tinblue.spacemod.client.SpaceModClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

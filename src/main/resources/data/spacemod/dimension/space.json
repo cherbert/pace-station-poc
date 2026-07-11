@@ -1,0 +1,10 @@
+{
+  "type": "spacemod:space",
+  "generator": {
+    "type": "spacemod:space",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "minecraft:the_void"
+    }
+  }
+}
