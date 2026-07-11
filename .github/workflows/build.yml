@@ -1,0 +1,57 @@
+name: Build mod
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency: build-main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build
+        id: build
+        continue-on-error: true
+        run: |
+          chmod +x gradlew
+          ./gradlew build --no-daemon --stacktrace > build.log 2>&1
+
+      - name: Upload jar artifact
+        if: steps.build.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: space-station-poc-jar
+          path: build/libs/*.jar
+
+      - name: Report result back into the repo
+        run: |
+          mkdir -p dist
+          rm -f dist/*.jar dist/status.txt dist/build.log
+          if [ "${{ steps.build.outcome }}" = "success" ]; then
+            cp build/libs/*.jar dist/
+            echo "success" > dist/status.txt
+          else
+            echo "failure" > dist/status.txt
+          fi
+          tail -c 100000 build.log > dist/build.log || true
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A dist
+          git commit -m "CI: build result [skip ci]" || echo "nothing to commit"
+          git push
+
+      - name: Fail job if build failed
+        if: steps.build.outcome != 'success'
+        run: exit 1
